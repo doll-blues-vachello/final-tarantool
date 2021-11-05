@@ -73,7 +73,6 @@ local function init(opts)
 
     httpd:start()
 
-    log.info("Created httpd FUCK FUCK")
     return true
 end
 

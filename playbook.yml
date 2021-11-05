@@ -1,0 +1,10 @@
+# playbook.yml
+---
+- name: Deploy my Tarantool Cartridge app
+  hosts: all
+  become: true
+  become_user: root
+  any_errors_fatal: true
+  gather_facts: false
+  roles:
+    - tarantool.cartridge

@@ -35,7 +35,7 @@ local function set_url(req)
     until resp
 
 
-    return {status=200, body="http://127.0.0.1:8080/r/"..string.format("%x", id)}
+    return {status=200, body="http://" .. req.headers['host'] .."/api/r/"..string.format("%x", id), headers={['Access-Control-Allow-Origin'] = '*'}}
 end
 
 local function get_url(req)
@@ -68,8 +68,8 @@ local function init(opts)
 
     local httpd = require('http.server').new('0.0.0.0', 8080)
 
-    httpd:route({path = '/set', method = 'POST'}, set_url)
-    httpd:route({path = '/r/:id', method = 'GET'}, get_url)
+    httpd:route({path = '/api/set', method = 'POST'}, set_url)
+    httpd:route({path = '/api/r/:id', method = 'GET'}, get_url)
 
     httpd:start()
 

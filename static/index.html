@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Url shortener</title>
+        <script src="qrcode.min.js"></script>
+    </head>
+    <body>
+
+        <h1>Yeah, Bash! URL shortener</h1>
+        <form id="shorten-form">
+            <input name="url" type="url" placeholder="https://example.com" id="inpt">
+            <input type="submit" value="Shorten!">
+        </form>
+
+        <div id="shortened"></div>
+        <div id="qrcode"></div>
+
+        <script>
+            const form = document.getElementById('shorten-form');
+            let qrcode = undefined
+            form.onsubmit = async (e) => {
+                e.preventDefault();
+                let url = document.getElementById('inpt').value;
+                let host = window.location.host;
+                // host = '127.0.0.1:8080';
+                const response = await fetch(`http://${host}/api/set`, {
+                    method: 'POST', body: new URLSearchParams(new FormData(form))
+                });
+                const result = await response.text();
+                document.getElementById('shortened').innerHTML = `<a href="${result}">${result}</a>`;
+                
+                if(qrcode === undefined){
+                    qrcode = new QRCode(document.getElementById("qrcode"), {
+                        text: result,
+                        width: 128,
+                        height: 128,
+                        colorDark : "#000000",
+                        colorLight : "#ffffff",
+                        correctLevel : QRCode.CorrectLevel.H
+                    });
+                }else{
+                    qrcode.clear();
+                    qrcode.makeCode(result)
+                }
+
+                return false;
+            };
+        </script>
+    </body>
+</html>
